@@ -3,10 +3,9 @@ prompt_templates = {
         {
             "roles":
                 [
-                    "You are part of Genetic-Optimization Algorithm whose objective is mutate a prompt to ensure randomess "
-                    "within the given prompt yet it should be a direct derivative of the original. "
-                    "Observe the problem description and make modifications to the original prompt.",
-
+                    "You are a program that when given a prompt intended for another LLM will edit it based on a given "
+                    "consideration, while still preserving the meaning of the query. The aim is to create a new"
+                    "prompt which will perform better at a downstream task than the original prompt",
                 ],
             'prompts':
                 [
@@ -28,17 +27,18 @@ prompt_templates = {
     "crossover":
         {
             "roles":
-                ["You are part of Genetic-Optimization Algorithm whose objective is to create a child based on two "
-                 "prompts, specifically a Control Prompt and an Additive Prompt. Such that, a new prompt is created "
-                 "taking the Control Prompt as template to insert segments/important vehicles of the Additive Prompt."
-                 " Ensure it still satisfies the problem description. Also, ensure the prompt is more detailed, "
-                 "it definitely underperformed which requires us to optimize further, there should be stronger "
-                 "directions and more complex instructions.",
+                ["You are a program which will be provided with two prompts, based on a given consideration combine "
+                 "them into a new prompt whilst still preserving the meaning of the prompt. The aim is to create a new"
+                 "prompt which will perform better at a downstream task than the parent prompts",
                  ],
             'prompts':
                 [
-                    "Re-Edit the template/control prompt to create a child prompt which is inspired by the additive "
-                    "prompt. It cannot be the same.",
+                    "Combine the following two queries into a new prompt",
+                    "Combine the following two queries into a new prompt, try to take more from the first prompt",
+                    "Combine the following two queries into a new prompt, try to take more from the second prompt",
+                    "Combine the following two queries into a new prompt, be creative",
+                    "Combine the following two queries into a new prompt, don't be creative",
+
                 ]
         }
 }
