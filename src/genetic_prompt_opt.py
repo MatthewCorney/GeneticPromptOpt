@@ -48,11 +48,11 @@ def genetic_algorithm(base_query: str,
                       crossover_method: PermutationFunction = Crossover,
                       generate_population: PopulationGeneration = MutationPopulationGeneration,
 
-                      population_size=20,  # Size of the population
-                      num_generations=10,  # Maximum number of generations
-                      crossover_rate=0.50,  # Probability of crossover (recombination)
-                      mutation_rate=0.50,  # Probability of mutation
-                      elitism_rate=0.05,  # Percentage of top individuals to carry over to next generation
+                      population_size:int=20,  # Size of the population
+                      num_generations:int=10,  # Maximum number of generations
+                      crossover_rate:float=0.50,  # Probability of crossover (recombination)
+                      mutation_rate:float=0.50,  # Probability of mutation
+                      elitism_rate:float=0.05,  # Percentage of top individuals to carry over to next generation
                       ):
     """
 
@@ -70,6 +70,9 @@ def genetic_algorithm(base_query: str,
     :param elitism_rate:
     :return:
     """
+    logger.info(f"Number of queries expected to be sent off "
+                f"{(population_size*len(training)*num_generations) + (population_size*num_generations*(mutation_rate*crossover_rate))}")
+
     population = generate_population.generate(base_query, population_size)
     population.append(base_query)
     logger.info(f'Population generated {population}')
