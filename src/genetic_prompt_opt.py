@@ -47,31 +47,31 @@ def genetic_algorithm(base_query: str,
                       mutation_method: PermutationFunction = Mutation,
                       crossover_method: PermutationFunction = Crossover,
                       generate_population: PopulationGeneration = MutationPopulationGeneration,
-
-                      population_size:int=20,  # Size of the population
-                      num_generations:int=10,  # Maximum number of generations
-                      crossover_rate:float=0.50,  # Probability of crossover (recombination)
-                      mutation_rate:float=0.50,  # Probability of mutation
-                      elitism_rate:float=0.05,  # Percentage of top individuals to carry over to next generation
-                      ):
+                      population_size: int = 20,
+                      num_generations: int = 10,
+                      crossover_rate: float = 0.50,
+                      mutation_rate: float = 0.50,
+                      elitism_rate: float = 0.05,
+                      ) -> dict:
     """
+    Base function for running the optimisation
 
-    :param base_query:
-    :param training:
-    :param fitness_method:
-    :param selection_method:
-    :param mutation_method:
-    :param crossover_method:
-    :param generate_population:
-    :param population_size:
-    :param num_generations:
-    :param crossover_rate:
-    :param mutation_rate:
-    :param elitism_rate:
+    :param base_query: Query to Optimise
+    :param training: Training examples
+    :param fitness_method: Initialised class to evaluate the predictions
+    :param selection_method: Initialised class to decide how to select individuals based on fitness
+    :param mutation_method: Initialised class to decide how to select mutate prompts
+    :param crossover_method: Initialised class to decide how to combine prompts
+    :param generate_population: Initialised class to decide how to generate an initial population
+    :param population_size: Size of the population/generations
+    :param num_generations: Number of generation to run for
+    :param crossover_rate: Prompt combination rate
+    :param mutation_rate: Prompt mutation rate
+    :param elitism_rate: Generational carry over rate
     :return:
     """
     logger.info(f"Number of queries expected to be sent off "
-                f"{(population_size*len(training)*num_generations) + (population_size*num_generations*(mutation_rate*crossover_rate))}")
+                f"{(population_size * len(training) * num_generations) + (population_size * num_generations * (mutation_rate * crossover_rate))}")
 
     population = generate_population.generate(base_query, population_size)
     population.append(base_query)
