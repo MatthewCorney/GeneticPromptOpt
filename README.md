@@ -5,9 +5,20 @@ the base prompt a better prompt can be generated.
 The intention in the code is to provide a generalised workflow which can be extended with more detailed
 and different evaluation/mutation strategies 
 
-todo: add logging
-todo: compare with other methods
-todo: edit the 
+Other libraries which do similar things include
+- EvoPrompt
+- Dspy
+- SAMMO
+- GeneticPromptLab
+
+### Tasks
+- add logging
+- compare with other methods
+- expand mutations
+- run comparisons with GeneticPromptLab and EvoPrompt
+- Add way to add demonstrations or examples
+- Add chain of thought
+
 # Dependencies
 The package has the following dependencies:
 Currently the pipeline only works for openai/chatgpt however this should be able to be extended with other openai
