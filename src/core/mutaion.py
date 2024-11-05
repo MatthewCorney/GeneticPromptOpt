@@ -1,7 +1,7 @@
 import random
 from abc import ABC, abstractmethod
 
-from src.settings import client, settings
+from src.settings import client, settings, logger
 from src.input import NewPrompt
 import json
 
@@ -40,6 +40,8 @@ class Mutation(PermutationFunction):
         """
         mutator_role = random.choice(prompt_templates["mutation"]['roles'])
         mutator_prompt = random.choice(prompt_templates["mutation"]['prompts'])
+
+        logger.debug(f"Mutating {base_query=} with {mutator_role=} {mutator_prompt=}")
         completion = client.beta.chat.completions.parse(
             model=settings.model,
             messages=[
@@ -73,6 +75,8 @@ class Crossover(PermutationFunction):
         """
         mutator_role = random.choice(prompt_templates["crossover"]['roles'])
         mutator_prompt = random.choice(prompt_templates["crossover"]['prompts'])
+
+        logger.debug(f"Mutating {prompt_1=} and {prompt_2=} with {mutator_role=} {mutator_prompt=}")
         completion = client.beta.chat.completions.parse(
             model=settings.model,
             messages=[

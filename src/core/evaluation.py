@@ -5,7 +5,7 @@ import numpy as np
 
 from src.input import BaseInputClass
 from typing import List
-from src.settings import client, settings
+from src.settings import client, settings, logger
 
 
 class FitnessFunction(ABC):
@@ -30,6 +30,7 @@ class ExactResponse(FitnessFunction):
         :param gold_standard:
         :return:
         """
+        logger.debug("Running evaluation")
         running_score = []
         for predicted, gold in zip(predicted_responses, gold_standard):
             values = []
@@ -51,6 +52,7 @@ class SimilarResponse(FitnessFunction):
         :param gold_standard:
         :return:
         """
+        logger.debug("Running evaluation")
         running_score = []
         for predicted, gold in zip(predicted_responses, gold_standard):
             values = []
@@ -74,6 +76,7 @@ class SemanticallySimilarResponse(FitnessFunction):
         :param gold_standard:
         :return:
         """
+        logger.debug("Running evaluation")
         running_score = []
         for predicted, gold in zip(predicted_responses, gold_standard):
             values = []
@@ -82,7 +85,7 @@ class SemanticallySimilarResponse(FitnessFunction):
                     0].embedding
                 gold_vector = client.embeddings.create(input=[v], model=settings.embedding_model).data[0].embedding
                 cosine_similarity = np.dot(predicted_vector, gold_vector) / (
-                            np.linalg.norm(predicted_vector) * np.linalg.norm(gold_vector))
+                        np.linalg.norm(predicted_vector) * np.linalg.norm(gold_vector))
                 values.append(cosine_similarity)
             running_score.append(np.mean(values))
         return float(np.mean(running_score))

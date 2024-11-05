@@ -95,6 +95,7 @@ class BoltzmannSelection(SelectionFunction):
         self.num_to_select = num_to_select
         self.initial_temperature = temperature
         self.decay_rate = 0.95
+        self.generation = 0
 
     def select(self, population, fitness_scores):
         """
@@ -107,6 +108,7 @@ class BoltzmannSelection(SelectionFunction):
         total_boltzmann_fitness = sum(boltzmann_fitness)
         selection_probs = [bf / total_boltzmann_fitness for bf in boltzmann_fitness]
         selected_individuals = random.choices(population, weights=selection_probs, k=self.num_to_select)
+        self.update_temperature(self.generation)
         return selected_individuals
 
     def update_temperature(self, generation):
@@ -116,3 +118,4 @@ class BoltzmannSelection(SelectionFunction):
         :return:
         """
         self.temperature = self.initial_temperature * self.decay_rate ** generation
+        self.generation += 1

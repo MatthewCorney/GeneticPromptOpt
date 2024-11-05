@@ -4,7 +4,7 @@ from src.core.evaluation import FitnessFunction, SimilarResponse
 from src.input import BaseInputClass
 from src.core.mutaion import PermutationFunction, Mutation, Crossover
 from src.settings import client
-from src.settings import settings
+from src.settings import settings, logger
 
 from src.core.population import PopulationGeneration, MutationPopulationGeneration
 from src.core.selection import SelectionFunction, TopCandidates
@@ -33,11 +33,10 @@ def predict(prompt: str, minibatch: list[BaseInputClass]) -> list[dict]:
             results = {key: getattr(event, key) for key in outputs}
             predicted_responses.append(results)
         except Exception as e:
-            #
-            print(e)
-            print(prompt)
-            print(i.form_input_query())
-            print(i.response_model)
+            logger.error(e)
+            logger.error(f"Issue with prediction for instance {i}"
+                         f"With prompt {prompt}"
+                         )
     return predicted_responses
 
 
@@ -73,8 +72,9 @@ def genetic_algorithm(base_query: str,
     """
     population = generate_population.generate(base_query, population_size)
     population.append(base_query)
+    logger.info(f'Population generated {population}')
     fitness_scores = []
-
+    logger.info(f'Calculating fitness of initial population')
     for prompt in population:
         predicted_responses = predict(prompt=prompt, minibatch=training)
         fitness_score = fitness_method.evaluate(predicted_responses=predicted_responses, gold_standard=training)
@@ -83,10 +83,14 @@ def genetic_algorithm(base_query: str,
     generations = []
     best_individual = population[fitness_scores.index(max(fitness_scores))]
     best_fitness = max(fitness_scores)
+    logger.info(f'Best Fitness {best_fitness}')
+    logger.info(f'Best Individual {best_individual}')
     generations.append({'population': population, 'scores': fitness_scores, 'generation': 0})
     for generation in range(num_generations):
+        logger.info(f'Running generation={generation}')
         best_individuals = selection_method.select(population, fitness_scores)
 
+        logger.debug(f'Creating offspring based on {crossover_rate=}')
         offspring = []
         for _ in range(population_size):
             if random.random() > crossover_rate:
@@ -97,6 +101,7 @@ def genetic_algorithm(base_query: str,
                 best_individual = random.sample(best_individuals, 1)[0]
                 offspring.append(best_individual)
 
+        logger.debug(f'Mutating offspring based on {mutation_rate=}')
         mutated_children = []
         for child in offspring:
             if random.random() > mutation_rate:
@@ -104,6 +109,8 @@ def genetic_algorithm(base_query: str,
                 mutated_children.append(mutated_child)
             else:
                 mutated_children.append(child)
+
+        logger.debug(f'Getting offspring fitness')
         offspring_fitness = []
         for prompt in mutated_children:
             predicted_responses = predict(prompt=prompt, minibatch=training)
@@ -117,7 +124,7 @@ def genetic_algorithm(base_query: str,
         offspring, offspring_fitness = zip(*sorted_offspring)
         offspring = list(offspring)
         offspring_fitness = list(offspring_fitness)
-
+        logger.debug(f'Replacing worst candidates with elite individuals from {generation - 1}')
         if num_elite > 0:
             elite_individuals_zip = sorted(zip(population, fitness_scores), key=lambda x: x[1], reverse=True)[
                                     :num_elite]
@@ -130,6 +137,8 @@ def genetic_algorithm(base_query: str,
         fitness_scores = offspring_fitness
         current_best_individual = population[fitness_scores.index(max(fitness_scores))]
         current_best_fitness = max(fitness_scores)
+        logger.info(f'Best Fitness in generation = {generation} fitness = {current_best_fitness}')
+        logger.info(f'Best Individual generation = {generation} prompt ={current_best_individual}')
         if current_best_fitness > best_fitness:
             best_fitness = current_best_fitness
             best_individual = current_best_individual
@@ -140,6 +149,3 @@ def genetic_algorithm(base_query: str,
             'best_score': max(fitness_scores),
             'generations': generations
             }
-
-
-

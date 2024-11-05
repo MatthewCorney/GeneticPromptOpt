@@ -12,10 +12,8 @@ Other libraries which do similar things include
 - GeneticPromptLab
 
 ### Tasks
-- add logging
-- compare with other methods
-- expand mutations
-- run comparisons with GeneticPromptLab and EvoPrompt
+- Expand mutations
+- Run comparisons with GeneticPromptLab and EvoPrompt
 - Add way to add demonstrations or examples
 - Add chain of thought
 

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from src.core.mutaion import Mutation
+from src.settings import logger
 
 
 class PopulationGeneration(ABC):
@@ -29,6 +30,7 @@ class MutationPopulationGeneration(PopulationGeneration):
         :return:
         """
         prompts = []
+        logger.info(f"Generating population of size{population_size}")
         for i in range(population_size):
             mutator = Mutation()
             mutated_response = mutator.permute(base_query)
