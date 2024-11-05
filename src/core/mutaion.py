@@ -3,7 +3,11 @@ from abc import ABC, abstractmethod
 
 from src.settings import client, settings
 from src.input import NewPrompt
-from src.core.prompts import prompt_templates
+import json
+
+# Load JSON data from a file
+with open('src\\core\\prompts.json', 'r') as file:
+    prompt_templates = json.load(file)
 
 
 class PermutationFunction(ABC):
