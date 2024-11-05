@@ -1,3 +1,5 @@
+![genetic_prompt_opt_icon](genetic_prompt_opt_icon.png)
+
 # Introduction
 Package for using genetic optimisation for prompt optimisation.
 The general idea is with a small set of training data and some basic prompts for combing and mutating
